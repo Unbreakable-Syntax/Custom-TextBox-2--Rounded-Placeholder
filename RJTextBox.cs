@@ -109,8 +109,12 @@ namespace CustomControls.RJControls
             get { return base.BackColor; }
             set
             {
-                base.BackColor = value;
-                textBox1.BackColor = value;
+				try
+				{
+					base.BackColor = value;
+					textBox1.BackColor = value;
+				}
+				catch (ArgumentException) { return; }
             }
         }
 
@@ -186,7 +190,7 @@ namespace CustomControls.RJControls
             set
             {
                 placeholderText = value;
-                textBox1.Text = "";
+                textBox1.PlaceholderText = "";
                 SetPlaceholder();
             }
         }
@@ -272,7 +276,7 @@ namespace CustomControls.RJControls
             if (string.IsNullOrWhiteSpace(textBox1.Text) && placeholderText != "")
             {
                 isPlaceholder = true;
-                textBox1.Text = placeholderText;
+                textBox1.PlaceholderText = placeholderText;
                 textBox1.ForeColor = placeholderColor;
                 if (isPasswordChar)
                     textBox1.UseSystemPasswordChar = false;
@@ -283,7 +287,7 @@ namespace CustomControls.RJControls
             if (isPlaceholder && placeholderText != "")
             {
                 isPlaceholder = false;
-                textBox1.Text = "";
+                textBox1.PlaceholderText = "";
                 textBox1.ForeColor = this.ForeColor;
                 if (isPasswordChar)
                     textBox1.UseSystemPasswordChar = true;
@@ -334,6 +338,7 @@ namespace CustomControls.RJControls
         #region -> TextBox events
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+			if (isPlaceholder) return;
             if (_TextChanged != null)
                 _TextChanged.Invoke(sender, e);
         }
