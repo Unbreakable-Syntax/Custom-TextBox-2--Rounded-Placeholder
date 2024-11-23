@@ -320,8 +320,6 @@ namespace CustomControls.RJControls
             pathTxt.Dispose();
         }
 
-        public bool IsEmpty() { return isPlaceholder || string.IsNullOrEmpty(textBox1.Text); }
-
         private void UpdateControlHeight()
         {
             if (textBox1.Multiline == false)
@@ -366,6 +364,7 @@ namespace CustomControls.RJControls
             this.Invalidate();
             RemovePlaceholder();
         }
+
         private void textBox1_Leave(object sender, EventArgs e)
         {
             isFocused = false;
