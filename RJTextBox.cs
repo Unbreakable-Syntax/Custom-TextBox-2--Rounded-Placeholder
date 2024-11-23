@@ -190,12 +190,10 @@ namespace CustomControls.RJControls
             set
             {
                 placeholderText = value;
-                textBox1.PlaceholderText = "";
+                textBox1.Text = "";
                 SetPlaceholder();
             }
         }
-
-
 
         #endregion
 
@@ -276,7 +274,7 @@ namespace CustomControls.RJControls
             if (string.IsNullOrWhiteSpace(textBox1.Text) && placeholderText != "")
             {
                 isPlaceholder = true;
-                textBox1.PlaceholderText = placeholderText;
+                textBox1.Text = placeholderText;
                 textBox1.ForeColor = placeholderColor;
                 if (isPasswordChar)
                     textBox1.UseSystemPasswordChar = false;
@@ -287,7 +285,7 @@ namespace CustomControls.RJControls
             if (isPlaceholder && placeholderText != "")
             {
                 isPlaceholder = false;
-                textBox1.PlaceholderText = "";
+                textBox1.Text = "";
                 textBox1.ForeColor = this.ForeColor;
                 if (isPasswordChar)
                     textBox1.UseSystemPasswordChar = true;
@@ -321,6 +319,9 @@ namespace CustomControls.RJControls
             }
             pathTxt.Dispose();
         }
+
+        public bool IsEmpty() { return isPlaceholder || string.IsNullOrEmpty(textBox1.Text); }
+
         private void UpdateControlHeight()
         {
             if (textBox1.Multiline == false)
