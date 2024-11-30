@@ -152,8 +152,11 @@ namespace CustomControls.RJControls
             }
             set
             {
-                textBox1.Text = value;
-                SetPlaceholder();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    RemovePlaceholder();
+                    internalTextBox.Text = value;
+                }
             }
         }
 
