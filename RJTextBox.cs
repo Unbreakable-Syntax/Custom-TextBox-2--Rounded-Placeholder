@@ -31,6 +31,15 @@ namespace CustomControls.RJControls
         //Events
         public event EventHandler _TextChanged;
 
+         // Cached render point
+        private Rectangle rectBorderSmooth;
+        private Rectangle rectBorder;
+        private int smoothSize;
+
+        private GraphicsPath pathBorderSmooth;
+        private GraphicsPath pathBorder;
+        GraphicsPath pathTxt;
+
         #endregion
 
         //-> Constructor
@@ -68,6 +77,7 @@ namespace CustomControls.RJControls
                 if (value >= 1)
                 {
                     borderSize = value;
+		    layoutChanged = true;
                     this.Invalidate();
                 }
             }
@@ -109,12 +119,12 @@ namespace CustomControls.RJControls
             get { return base.BackColor; }
             set
             {
-				try
-				{
-					base.BackColor = value;
-					textBox1.BackColor = value;
-				}
-				catch (ArgumentException) { return; }
+		try
+		{
+			base.BackColor = value;
+			textBox1.BackColor = value;
+		}
+		catch (ArgumentException) { return; }
             }
         }
 
@@ -169,6 +179,7 @@ namespace CustomControls.RJControls
                 if (value >= 0)
                 {
                     borderRadius = value;
+		    layoutChanged = true;
                     this.Invalidate();//Redraw control
                 }
             }
@@ -220,18 +231,14 @@ namespace CustomControls.RJControls
             if (borderRadius > 1)//Rounded TextBox
             {
                 //-Fields
-                var rectBorderSmooth = this.ClientRectangle;
-                var rectBorder = Rectangle.Inflate(rectBorderSmooth, -borderSize, -borderSize);
-                int smoothSize = borderSize > 0 ? borderSize : 1;
-
-                using (GraphicsPath pathBorderSmooth = GetFigurePath(rectBorderSmooth, borderRadius))
-                using (GraphicsPath pathBorder = GetFigurePath(rectBorder, borderRadius - borderSize))
+		if (layoutChanged) { RefreshDataPoints(); }
                 using (Pen penBorderSmooth = new Pen(this.Parent.BackColor, smoothSize))
                 using (Pen penBorder = new Pen(borderColor, borderSize))
                 {
                     //-Drawing
                     this.Region = new Region(pathBorderSmooth);//Set the rounded region of UserControl
                     if (borderRadius > 15) SetTextBoxRoundedRegion();//Set the rounded region of TextBox component
+		    if (layoutChanged) { layoutChanged = false; }
                     graph.SmoothingMode = SmoothingMode.AntiAlias;
                     penBorder.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
                     if (isFocused) penBorder.Color = borderFocusColor;
@@ -294,6 +301,18 @@ namespace CustomControls.RJControls
                     textBox1.UseSystemPasswordChar = true;
             }
         }        
+	
+ 	private void RefreshDataPoints()
+        {
+            rectBorderSmooth = this.ClientRectangle;
+            rectBorder = Rectangle.Inflate(rectBorderSmooth, -borderSize, -borderSize);
+            smoothSize = borderSize > 0 ? borderSize : 1;
+            pathBorderSmooth?.Dispose();
+            pathBorderSmooth = GetFigurePath(rectBorderSmooth, borderRadius);
+            pathBorder?.Dispose();
+            pathBorder = GetFigurePath(rectBorder, borderRadius - borderSize);
+        }
+	
         private GraphicsPath GetFigurePath(Rectangle rect, int radius)
         {
             GraphicsPath path = new GraphicsPath();
@@ -309,18 +328,24 @@ namespace CustomControls.RJControls
         }
         private void SetTextBoxRoundedRegion()
         {
-            GraphicsPath pathTxt;
             if (Multiline)
             {
-                pathTxt = GetFigurePath(textBox1.ClientRectangle, borderRadius - borderSize);
-                textBox1.Region = new Region(pathTxt);
+                if (layoutChanged)
+                {
+                    pathTxt?.Dispose();
+                    pathTxt = GetFigurePath(internalTextBox.ClientRectangle, borderRadius - borderSize);
+                }
+                internalTextBox.Region = new Region(pathTxt);
             }
             else
             {
-                pathTxt = GetFigurePath(textBox1.ClientRectangle, borderSize * 2);
-                textBox1.Region = new Region(pathTxt);
+                if (layoutChanged)
+                {
+                    pathTxt?.Dispose();
+                    pathTxt = GetFigurePath(internalTextBox.ClientRectangle, borderSize * 2);
+                }
+                internalTextBox.Region = new Region(pathTxt);
             }
-            pathTxt.Dispose();
         }
 
         private void UpdateControlHeight()
