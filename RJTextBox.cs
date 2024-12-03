@@ -38,7 +38,7 @@ namespace CustomControls.RJControls
 
         private GraphicsPath pathBorderSmooth;
         private GraphicsPath pathBorder;
-        GraphicsPath pathTxt;
+        private GraphicsPath pathTxt;
 
         #endregion
 
