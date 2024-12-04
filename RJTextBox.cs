@@ -47,6 +47,9 @@ namespace CustomControls.RJControls
         {
             //Created by designer
             InitializeComponent();
+	    SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.DoubleBuffer, true);
         }
 
         #region -> Properties
