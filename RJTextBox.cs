@@ -231,12 +231,15 @@ namespace CustomControls.RJControls
             if (borderRadius > 1)//Rounded TextBox
             {
                 //-Fields
-		if (layoutChanged) { RefreshDataPoints(); }
+		if (layoutChanged) 
+  		{
+    			RefreshDataPoints();
+       			this.Region = new Region(pathBorderSmooth); // Set the rounded region of UserControl
+       		}
                 using (Pen penBorderSmooth = new Pen(this.Parent.BackColor, smoothSize))
                 using (Pen penBorder = new Pen(borderColor, borderSize))
                 {
                     //-Drawing
-                    this.Region = new Region(pathBorderSmooth);//Set the rounded region of UserControl
                     if (borderRadius > 15) SetTextBoxRoundedRegion();//Set the rounded region of TextBox component
 		    if (layoutChanged) { layoutChanged = false; }
                     graph.SmoothingMode = SmoothingMode.AntiAlias;
@@ -265,7 +268,11 @@ namespace CustomControls.RJControls
                 //Draw border
                 using (Pen penBorder = new Pen(borderColor, borderSize))
                 {
-                    this.Region = new Region(this.ClientRectangle);
+                    if (layoutChanged)
+                    {
+                        this.Region = new Region(this.ClientRectangle);
+                        layoutChanged = false;
+                    }
                     penBorder.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
                     if (isFocused) penBorder.Color = borderFocusColor;
 
