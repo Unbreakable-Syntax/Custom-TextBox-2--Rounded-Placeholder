@@ -165,7 +165,7 @@ namespace CustomControls.RJControls
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     RemovePlaceholder();
-                    internalTextBox.Text = value;
+                    textBox1.Text = value;
                 }
             }
         }
@@ -328,23 +328,14 @@ namespace CustomControls.RJControls
         }
         private void SetTextBoxRoundedRegion()
         {
-            if (Multiline)
+            if (layoutChanged)
             {
-                if (layoutChanged)
-                {
-                    pathTxt?.Dispose();
-                    pathTxt = GetFigurePath(internalTextBox.ClientRectangle, borderRadius - borderSize);
-                }
-                internalTextBox.Region = new Region(pathTxt);
-            }
-            else
-            {
-                if (layoutChanged)
-                {
-                    pathTxt?.Dispose();
-                    pathTxt = GetFigurePath(internalTextBox.ClientRectangle, borderSize * 2);
-                }
-                internalTextBox.Region = new Region(pathTxt);
+                pathTxt?.Dispose();
+                int effectiveBorderRadius = Multiline
+                    ? borderRadius - borderSize
+                    : borderSize * 2;
+                pathTxt = GetFigurePath(textBox1.ClientRectangle, effectiveBorderRadius);
+                textBox1.Region = new Region(pathTxt);
             }
         }
 
