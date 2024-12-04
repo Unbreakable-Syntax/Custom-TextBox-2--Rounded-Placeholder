@@ -218,6 +218,8 @@ namespace CustomControls.RJControls
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+	    layoutChanged = true;
+            Invalidate();
             if (this.DesignMode)
                 UpdateControlHeight();
         }
