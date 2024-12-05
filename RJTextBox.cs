@@ -21,6 +21,7 @@ namespace CustomControls.RJControls
         private int borderSize = 2;
         private bool underlinedStyle = false;
         private bool isFocused = false;
+	private bool removeNewline = false;
 
         private int borderRadius = 0;
         private Color placeholderColor = Color.DarkGray;
@@ -98,6 +99,16 @@ namespace CustomControls.RJControls
         }
 
         [Category("RJ Code Advance")]
+        public bool RemoveNewline
+        {
+            get { return removeNewline; }
+            set
+            {
+                removeNewline = value;
+            }
+        }
+
+        [Category("RJ Code Advance")]
         public bool PasswordChar
         {
             get { return isPasswordChar; }
@@ -167,8 +178,10 @@ namespace CustomControls.RJControls
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    RemovePlaceholder();
-                    textBox1.Text = value;
+		    RemovePlaceholder();
+		    string val = value;
+        	    if (removeNewline) { val = val.Replace("\n", "").Replace("\r", ""); ; }
+                    textBox1.Text = val;
                 }
             }
         }
